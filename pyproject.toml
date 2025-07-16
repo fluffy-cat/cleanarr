@@ -1,0 +1,16 @@
+[project]
+name = "cleanarr"
+version = "1.0.0"
+description = "Manages servar downloads"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiohttp>=3.12.14",
+    "pytest>=8.4.1",
+    "transmission-rpc>=7.0.11",
+]
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio>=1.0.0",
+]
