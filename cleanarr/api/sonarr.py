@@ -3,10 +3,8 @@ from typing import Any
 import aiohttp
 from aiohttp import ClientResponse
 
-from cleanarr.servarr import ServarrApi
 
-
-class SonarrApi(ServarrApi):
+class SonarrApi:
     def __init__(self, url: str, api_key: str):
         self.url = url
         self.api_key = api_key
