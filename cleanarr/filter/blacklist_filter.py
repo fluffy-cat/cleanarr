@@ -1,4 +1,4 @@
-from cleanarr.filter.Filter import Filter
+from cleanarr.filter.filter import Filter
 from cleanarr.model.torrent import Torrent
 
 

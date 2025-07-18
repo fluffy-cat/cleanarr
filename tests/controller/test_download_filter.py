@@ -4,6 +4,7 @@ import pytest
 
 from cleanarr.controller.download_filter import DownloadFilter
 from cleanarr.model.release import Release
+from cleanarr.model.torrent import Torrent
 
 
 @pytest.fixture
@@ -22,8 +23,13 @@ def downloader():
 
 
 @pytest.fixture
-def controller(servarrs, downloader):
-    return DownloadFilter(servarrs, downloader)
+def filter():
+    return Mock()
+
+
+@pytest.fixture
+def controller(servarrs, downloader, filter):
+    return DownloadFilter(servarrs, downloader, filter)
 
 
 async def test_shouldDoNothing_whenThereAreNoServarrs(controller, servarrs, radarr):
@@ -35,7 +41,7 @@ async def test_shouldDoNothing_whenThereAreNoServarrs(controller, servarrs, rada
     assert not radarr.ban_download.called
 
 
-async def test_shouldDoNothing_whenThereAreNoDownloads(controller, servarrs, radarr):
+async def test_shouldDoNothing_whenThereAreNoReleases(controller, radarr):
     radarr.get_all_downloads.return_value = []
 
     await controller.poll()
@@ -44,8 +50,28 @@ async def test_shouldDoNothing_whenThereAreNoDownloads(controller, servarrs, rad
     assert not radarr.ban_download.called
 
 
-async def test_shouldAcceptDownload_whenThereAreNoFilters(controller, servarrs, radarr):
+async def test_shouldAcceptDownload_whenFilterReturnsTrue(controller, radarr, filter):
     radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='')]
+    filter.test.return_value = (True, '')
+
+    await controller.poll()
+
+    assert not radarr.ban_download.called
+
+
+async def test_shouldRejectDownload_whenFilterReturnsFalse(controller, radarr, filter, downloader):
+    radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='111')]
+    downloader.get_torrents.return_value = {'111': Torrent(name='Some Thing')}
+    filter.test.return_value = (False, 'Denied!')
+
+    await controller.poll()
+
+    radarr.ban_download.assert_called_with(123)
+
+
+async def test_shouldIgnoreDownload_whenTorrentNotFound(controller, radarr, downloader):
+    radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='111')]
+    downloader.get_torrents.return_value = {}
 
     await controller.poll()
 
