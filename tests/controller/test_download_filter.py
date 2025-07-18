@@ -69,7 +69,7 @@ async def test_shouldRejectDownload_whenFilterReturnsFalse(controller, radarr, f
     radarr.ban_download.assert_called_with(123)
 
 
-async def test_shouldIgnoreDownload_whenTorrentNotFound(controller, radarr, downloader):
+async def test_shouldIgnoreDownload_whenTorrentIsNotFound(controller, radarr, downloader):
     radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='111')]
     downloader.get_torrents.return_value = {}
 

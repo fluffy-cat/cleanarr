@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from cleanarr.filter.blacklist_filter import BlacklistFilter
+from cleanarr.filter.blacklist import BlacklistFilter
 from cleanarr.model.torrent import Torrent
 
 
