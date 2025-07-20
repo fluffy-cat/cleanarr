@@ -9,8 +9,7 @@ class TorrentClient:
         self.client = client
 
     def get_torrents(self, hashes: list[str]) -> dict[str, Torrent]:
-        hex_str = [h.lower() for h in hashes]
-        torrents = [to_torrent(t) for h in hex_str for t in self.client.get_torrents(h)]
+        torrents = [to_torrent(t) for h in hashes for t in self.client.get_torrents(h)]
         return {t['hash']: t for t in torrents}
 
 

@@ -8,7 +8,7 @@ class BlacklistFilter(Filter):
 
     def test(self, download: Torrent) -> tuple[bool, str]:
         for f in self.filters:
-            result = f.test(download)
-            if not result[0]:
-                return result
-        return (True, '')
+            accept, error = f.test(download)
+            if not accept:
+                return accept, error
+        return True, ''

@@ -8,9 +8,9 @@ def test_shouldAccept_whenFilterListIsEmpty():
     download = Torrent()
     blacklist = BlacklistFilter([])
 
-    result = blacklist.test(download)
+    accept, _ = blacklist.test(download)
 
-    assert result == (True, '')
+    assert accept == True
 
 
 def test_shouldAccept_whenAllChildFiltersPass():
@@ -21,11 +21,11 @@ def test_shouldAccept_whenAllChildFiltersPass():
     filter2.test.return_value = (True, '')
     blacklist = BlacklistFilter([filter1, filter2])
 
-    result = blacklist.test(download)
+    accept, _ = blacklist.test(download)
 
     assert filter1.test.called
     assert filter2.test.called
-    assert result == (True, '')
+    assert accept == True
 
 
 def test_shouldRejectAndEndChecks_whenFirstChildFilterFails():
@@ -36,7 +36,8 @@ def test_shouldRejectAndEndChecks_whenFirstChildFilterFails():
     filter2.test.return_value = (True, 'ignored')
     blacklist = BlacklistFilter([filter1, filter2])
 
-    result = blacklist.test(download)
+    accept, error = blacklist.test(download)
 
-    assert result == (False, 'reason')
+    assert accept == False
+    assert error == 'reason'
     assert not filter2.test.called

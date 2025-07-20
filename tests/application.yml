@@ -1,0 +1,17 @@
+download_filter:
+  poll_interval_s: 60
+  blacklisted_files:
+    - scr
+    - lnk
+  wanted_files:
+    - mkv
+    - avi
+    - mp4
+sonarr:
+  url: http://localhost:8989
+  api_key: ''
+radarr:
+  url: http://localhost:7878
+  api_key: ''
+transmission:
+  url: http://localhost:9091

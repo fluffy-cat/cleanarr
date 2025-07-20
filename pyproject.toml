@@ -1,7 +1,7 @@
 [project]
 name = "cleanarr"
 version = "1.0.0"
-description = "Manages servar downloads"
+description = "Manages servarr downloads"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
