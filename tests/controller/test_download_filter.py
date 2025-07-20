@@ -35,7 +35,7 @@ def controller(servarrs, downloader, filter):
 async def test_shouldDoNothing_whenThereAreNoServarrs(controller, servarrs, radarr):
     servarrs.clear()
 
-    await controller.poll()
+    await controller.run()
 
     assert not radarr.get_all_downloads.called
     assert not radarr.ban_download.called
@@ -44,7 +44,7 @@ async def test_shouldDoNothing_whenThereAreNoServarrs(controller, servarrs, rada
 async def test_shouldDoNothing_whenThereAreNoReleases(controller, radarr):
     radarr.get_all_downloads.return_value = []
 
-    await controller.poll()
+    await controller.run()
 
     assert radarr.get_all_downloads.called
     assert not radarr.ban_download.called
@@ -54,7 +54,7 @@ async def test_shouldAcceptDownload_whenFilterReturnsTrue(controller, radarr, fi
     radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='')]
     filter.test.return_value = (True, '')
 
-    await controller.poll()
+    await controller.run()
 
     assert not radarr.ban_download.called
 
@@ -64,7 +64,7 @@ async def test_shouldRejectDownload_whenFilterReturnsFalse(controller, radarr, f
     downloader.get_torrents.return_value = {'111': Torrent(name='Some Thing')}
     filter.test.return_value = (False, 'Denied!')
 
-    await controller.poll()
+    await controller.run()
 
     radarr.ban_download.assert_called_with(123)
 
@@ -73,6 +73,6 @@ async def test_shouldIgnoreDownload_whenTorrentIsNotFound(controller, radarr, do
     radarr.get_all_downloads.return_value = [Release(servarr_id=123, download_id='111')]
     downloader.get_torrents.return_value = {}
 
-    await controller.poll()
+    await controller.run()
 
     assert not radarr.ban_download.called

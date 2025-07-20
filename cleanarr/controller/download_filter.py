@@ -11,7 +11,7 @@ class DownloadFilter:
         self.torrent = torrent
         self.filter = filter
 
-    async def poll(self):
+    async def run(self):
         for servarr in self.servarrs:
             releases = await servarr.get_all_downloads()
             hashes = [r['download_id'] for r in releases]
