@@ -18,4 +18,4 @@ class Radarr(ServarrApi):
 
 
 def to_release(record: dict[str, Any]) -> Release:
-    return Release(servarr_id=record['id'], download_id=record['downloadId'])
+    return Release(servarr_id=record['id'], download_id=record.get('downloadId', ''))

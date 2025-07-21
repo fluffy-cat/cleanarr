@@ -1,4 +1,5 @@
 import asyncio
+import traceback
 from collections.abc import Callable
 from datetime import timedelta
 from typing import Any
@@ -59,7 +60,7 @@ async def new_periodic_task(callable: Callable[[], Any], interval: timedelta):
 
 
 def main():
-    with open('../tests/application.yml', 'r') as file:
+    with open('application.yml', 'r') as file:
         config = yaml.safe_load(file)
     sonarr = new_sonarr(config['sonarr'])
     radarr = new_radarr(config['radarr'])
@@ -72,7 +73,7 @@ def main():
     except KeyboardInterrupt:
         pass
     except Exception as e:
-        print(f'Uncaught exception found {e}')
+        print(f'Uncaught exception found {e} {traceback.format_exc()}')
 
 
 if __name__ == "__main__":

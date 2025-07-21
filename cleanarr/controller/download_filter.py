@@ -14,7 +14,7 @@ class DownloadFilter:
     async def run(self):
         for servarr in self.servarrs:
             releases = await servarr.get_all_downloads()
-            hashes = [r['download_id'].lower() for r in releases]
+            hashes = [r['download_id'].lower() for r in releases if r['download_id']]
             downloads = self.torrent.get_torrents(hashes)
             for release in releases:
                 download = downloads.get(release['download_id'].lower())

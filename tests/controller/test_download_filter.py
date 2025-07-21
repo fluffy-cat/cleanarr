@@ -76,3 +76,11 @@ async def test_shouldIgnoreDownload_whenTorrentIsNotFound(controller, radarr, do
     await controller.run()
 
     assert not radarr.ban_download.called
+
+async def test_shouldIgnoreDownload_whenDownloadIdIsMissing(controller, radarr, downloader):
+    radarr.get_all_downloads.return_value = [Release(servarr_id=1, download_id='')]
+    downloader.get_torrents.return_value = {}
+
+    await controller.run()
+
+    assert not radarr.ban_download.called
